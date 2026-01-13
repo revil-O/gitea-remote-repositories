@@ -1,0 +1,66 @@
+name: Release VSIX to Gitea
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build VSIX
+        run: |
+          npm run compile
+          npx vsce package --no-dependencies --baseContentUrl "http://10.10.0.254:3002/revilo/Gitea-remote-repositories/raw/branch/master"
+      
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(grep '"version"' package.json | head -1 | sed 's/.*"\([^"]*\)".*/\1/')
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "GIT_TAG=v$VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Create Gitea Release
+        env:
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+          GITEA_URL: http://10.10.0.254:3002
+        run: |
+          ./release.sh ${{ steps.version.outputs.GIT_TAG }}
+      
+      - name: Upload VSIX as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: VSIX-${{ steps.version.outputs.VERSION }}
+          path: Gitea-Remote-Repositories-G2R-${{ steps.version.outputs.VERSION }}.vsix
+      
+      - name: Create GitHub Release (if applicable)
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: G2R ${{ steps.version.outputs.VERSION }}
+          body: |
+            ## Release v${{ steps.version.outputs.VERSION }}
+            
+            See [CHANGELOG.md](./CHANGELOG.md) for details.
+            
+            ### Download
+            - [Gitea-Remote-Repositories-G2R-${{ steps.version.outputs.VERSION }}.vsix](https://github.com/revilo/Gitea-remote-repositories/releases/download/${{ github.ref }}/Gitea-Remote-Repositories-G2R-${{ steps.version.outputs.VERSION }}.vsix)
+          draft: false
+          prerelease: false

@@ -1,0 +1,36 @@
+# Marketplace und Online-Inhalte ausschließen
+**/.git
+**/.gitignore
+**/.vscode
+**/*.test.ts
+**/test/**
+**/mocha.opts
+**/tsconfig.json
+**/tslint.json
+**/.eslintrc.json
+.nycrc
+dist/extension.d.ts
+dist/extension.d.ts.map
+dist/**/*.d.ts
+dist/**/*.d.ts.map
+
+# Node-Module ausschließen (werden nicht benötigt)
+node_modules/**
+
+# Build-Output
+out/
+*.vsix
+
+# Dokumentation (nur wichtige Dateien behalten)
+!README.md
+!CHANGELOG.md
+*.md
+!README.md
+!CHANGELOG.md
+LICENSE.txt
+
+# Development-Dateien
+webpack.config.js
+tsconfig.json
+.eslintrc.json
+.gitignore
