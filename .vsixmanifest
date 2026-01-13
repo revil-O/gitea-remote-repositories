@@ -14,9 +14,9 @@
 				<Property Id="Microsoft.VisualStudio.Code.ExtensionPack" Value="" />
 				<Property Id="Microsoft.VisualStudio.Code.ExtensionKind" Value="workspace" />
 				<Property Id="Microsoft.VisualStudio.Code.LocalizedLanguages" Value="" />
-			<Property Id="Microsoft.VisualStudio.Services.Links.Source" Value="http://10.10.0.254:3002/revilo/Gitea-remote-repositories.git" />
-			<Property Id="Microsoft.VisualStudio.Services.Links.Getstarted" Value="http://10.10.0.254:3002/revilo/Gitea-remote-repositories.git" />
-			<Property Id="Microsoft.VisualStudio.Services.Links.Repository" Value="http://10.10.0.254:3002/revilo/Gitea-remote-repositories.git" />
+			<Property Id="Microsoft.VisualStudio.Services.Links.Source" Value="https://github.com/revil-O/gitea-remote-repositories" />
+			<Property Id="Microsoft.VisualStudio.Services.Links.Getstarted" Value="https://github.com/revil-O/gitea-remote-repositories" />
+			<Property Id="Microsoft.VisualStudio.Services.Links.Repository" Value="https://github.com/revil-O/gitea-remote-repositories" />
 				<Property Id="Microsoft.VisualStudio.Services.GitHubFlavoredMarkdown" Value="true" />
 				<Property Id="Microsoft.VisualStudio.Services.Content.Pricing" Value="Free"/>
 			</Properties>
