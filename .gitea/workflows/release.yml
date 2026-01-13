@@ -25,7 +25,7 @@ jobs:
       - name: Build VSIX
         run: |
           npm run compile
-          npx vsce package --no-dependencies --baseContentUrl "http://10.10.0.254:3002/revilo/Gitea-remote-repositories/raw/branch/master"
+          npx vsce package --no-dependencies --baseContentUrl "https://github.com/revil-O/gitea-remote-repositories/raw/main"
       
       - name: Get version
         id: version
@@ -34,12 +34,12 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "GIT_TAG=v$VERSION" >> $GITHUB_OUTPUT
       
-      - name: Create Gitea Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: g2r-*.vsix
         env:
-          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
-          GITEA_URL: http://10.10.0.254:3002
-        run: |
-          ./release.sh ${{ steps.version.outputs.GIT_TAG }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Upload VSIX as artifact
         uses: actions/upload-artifact@v3
@@ -61,6 +61,6 @@ jobs:
             See [CHANGELOG.md](./CHANGELOG.md) for details.
             
             ### Download
-            - [Gitea-Remote-Repositories-G2R-${{ steps.version.outputs.VERSION }}.vsix](https://github.com/revilo/Gitea-remote-repositories/releases/download/${{ github.ref }}/Gitea-Remote-Repositories-G2R-${{ steps.version.outputs.VERSION }}.vsix)
+            - [g2r-${{ steps.version.outputs.VERSION }}.vsix](https://github.com/revil-O/gitea-remote-repositories/releases/download/${{ github.ref }}/g2r-${{ steps.version.outputs.VERSION }}.vsix)
           draft: false
           prerelease: false
