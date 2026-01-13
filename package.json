@@ -1,0 +1,359 @@
+{
+	"name": "g2r",
+	"displayName": "Gitea Remote Repositories - G2R",
+	"description": "git remote request tool for gitea",
+	"version": "1.0.4",
+	"repository": {
+		"type": "git",
+		"url": "http://10.10.0.254:3002/revilo/Gitea-remote-repositories.git"
+	},
+	"license": "MIT",
+	"publisher": "revilo",
+	"engines": {
+		"vscode": "^1.75.0"
+	},
+	"categories": [
+		"Other",
+		"SCM Providers"
+	],
+	"icon": "resources/icons/logo.png",
+	"activationEvents": [
+		"*"
+	],
+	"main": "./release/extension.js",
+	"contributes": {
+		"views": {
+			"scm": [
+				{
+					"id": "g2r",
+					"name": "Pull Requests",
+					"type": "tree"
+				}
+			],
+			"explorer": [
+				{
+					"id": "giteaRepositories",
+					"name": "Gitea Repositories",
+					"type": "tree",
+					"when": "gitea.connected"
+				},
+				{
+					"id": "giteaBranches",
+					"name": "Gitea Branches",
+					"type": "tree",
+					"when": "gitea.connected"
+				},
+				{
+					"id": "giteaIssues",
+					"name": "Gitea Issues",
+					"type": "tree",
+					"when": "gitea.connected"
+				},
+				{
+					"id": "giteaFiles",
+					"name": "Gitea Files",
+					"type": "tree",
+					"when": "gitea.connected"
+				}
+			]
+		},
+		"viewsWelcome": [
+			{
+				"view": "g2r",
+				"contents": "TOKEN or HOST not configured\n[Configure Token](command:g2r.setting:token)\n[Configure Host](command:g2r.setting:host)",
+				"when": "SETTING_STATE == 1 || SETTING_STATE == 2 || SETTING_STATE == 3"
+			},
+			{
+				"view": "giteaRepositories",
+				"contents": "No server connected\n[Connect to Gitea](command:gitea.connect)",
+				"when": "!gitea.connected"
+			}
+		],
+		"commands": [
+			{
+				"command": "gitea.connect",
+				"title": "Gitea: Connect to Server",
+				"category": "Gitea",
+				"icon": "$(server-process)"
+			},
+			{
+				"command": "gitea.disconnect",
+				"title": "Gitea: Disconnect",
+				"category": "Gitea"
+			},
+			{
+				"command": "gitea.openRepository",
+				"title": "Gitea: Open Repository",
+				"category": "Gitea"
+			},
+			{
+				"command": "gitea.openFile",
+				"title": "Gitea: Open File",
+				"category": "Gitea"
+			},
+			{
+				"command": "gitea.cloneToLocal",
+				"title": "Gitea: Clone Repository to Local",
+				"category": "Gitea",
+				"icon": "$(repo-clone)"
+			},
+			{
+				"command": "gitea.searchRepositories",
+				"title": "Gitea: Search Repositories",
+				"category": "Gitea",
+				"icon": "$(search)"
+			},
+			{
+				"command": "gitea.cloneRepository",
+				"title": "Gitea: Clone Repository",
+				"category": "Gitea",
+				"icon": "$(repo-clone)"
+			},
+			{
+				"command": "gitea.syncRepository",
+				"title": "Gitea: Sync Repository to Local",
+				"category": "Gitea",
+				"icon": "$(sync)"
+			},
+			{
+				"command": "extension.showChangelog",
+				"title": "Show Changelog & Git History",
+				"category": "G2R",
+				"icon": "$(history)"
+			},
+			{
+				"command": "g2r.setting:token",
+				"title": "Gitea Token Setting"
+			},
+			{
+				"command": "g2r.setting:host",
+				"title": "Gitea Host Setting"
+			},
+			{
+				"command": "g2r.action:feedback",
+				"title": "Feedback pull request",
+				"icon": "$(source-control)"
+			},
+			{
+				"command": "g2r.action:accept",
+				"title": "Accept pull request",
+				"icon": "$(check)"
+			},
+			{
+				"command": "g2r.action:reject",
+				"title": "Reject pull request",
+				"icon": "$(discard)"
+			},
+			{
+				"command": "g2r.action:refresh",
+				"title": "Refresh pull requests",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "g2r.action:diff",
+				"title": "Review fils diff",
+				"icon": "$(diff)"
+			},
+			{
+				"command": "gitea.openLocalRepository",
+				"title": "Open Local Repository",
+				"category": "Gitea",
+				"icon": "$(folder-opened)"
+			},
+			{
+				"command": "gitea.syncLocalRepository",
+				"title": "Sync Local Repository",
+				"category": "Gitea",
+				"icon": "$(sync)"
+			},
+			{
+				"command": "gitea.removeLocalRepository",
+				"title": "Remove Local Repository",
+				"category": "Gitea",
+				"icon": "$(trash)"
+			}
+		],
+		"configuration": {
+			"title": "Gitea Remote Repositories",
+			"properties": {
+				"g2r.token": {
+					"type": "string",
+					"scope": "machine-overridable",
+					"markdownDescription": "Gitea access token for authentication",
+					"default": ""
+				},
+				"g2r.host": {
+					"type": "string",
+					"scope": "machine-overridable",
+					"markdownDescription": "Gitea server address (e.g., `https://gitea.example.com` or `10.10.0.254:3002`)",
+					"default": ""
+				},
+				"g2r.autoConnect": {
+					"type": "boolean",
+					"scope": "machine-overridable",
+					"markdownDescription": "Automatically connect to Gitea server on extension activation",
+					"default": false
+				},
+				"g2r.showWelcome": {
+					"type": "boolean",
+					"scope": "machine-overridable",
+					"markdownDescription": "Show welcome page when extension is first activated",
+					"default": true
+				},
+				"g2r.autoFetchPullRequests": {
+					"type": "boolean",
+					"scope": "machine-overridable",
+					"markdownDescription": "Automatically fetch pull requests on connect",
+					"default": true
+				},
+				"g2r.refreshInterval": {
+					"type": "integer",
+					"scope": "machine-overridable",
+					"markdownDescription": "Auto-refresh interval in seconds (0 = disabled)",
+					"default": 300,
+					"minimum": 0
+				},
+				"g2r.trustInsecureCertificates": {
+					"type": "boolean",
+					"scope": "machine-overridable",
+					"markdownDescription": "Trust self-signed SSL certificates (use with caution)",
+					"default": true
+				},
+				"g2r.enableLogging": {
+					"type": "boolean",
+					"scope": "machine-overridable",
+					"markdownDescription": "Enable debug logging for troubleshooting",
+					"default": false
+				},
+				"g2r.maxRepositories": {
+					"type": "integer",
+					"scope": "machine-overridable",
+					"markdownDescription": "Maximum number of repositories to display in tree view",
+					"default": 50,
+					"minimum": 1
+				},
+				"g2r.localClone.enabled": {
+					"type": "boolean",
+					"scope": "machine-overridable",
+					"markdownDescription": "Enable local repository cloning and sync features",
+					"default": true
+				},
+				"g2r.localClone.defaultPath": {
+					"type": "string",
+					"scope": "machine-overridable",
+					"markdownDescription": "Default path for cloning repositories locally",
+					"default": ""
+				},
+				"g2r.autoSync.enabled": {
+					"type": "boolean",
+					"scope": "machine-overridable",
+					"markdownDescription": "Enable automatic sync of local repositories",
+					"default": false
+				},
+				"g2r.autoSync.interval": {
+					"type": "integer",
+					"scope": "machine-overridable",
+					"markdownDescription": "Auto-sync interval in seconds (0 = disabled)",
+					"default": 300,
+					"minimum": 0
+				},
+				"g2r.sync.excludePatterns": {
+					"type": "array",
+					"scope": "machine-overridable",
+					"markdownDescription": "Glob patterns for files to exclude during sync",
+					"default": [
+						"node_modules/**",
+						".git/**",
+						".vscode/**",
+						".env"
+					],
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "extension.showChangelog"
+				}
+			],
+			"view/title": [
+				{
+					"command": "extension.showChangelog",
+					"when": "view == g2r",
+					"group": "navigation@1"
+				},
+				{
+					"command": "g2r.action:accept",
+					"when": "view == g2r && ACTIVE_PULL && !ACTIVE_PULL_CONFLICT",
+					"group": "navigation"
+				},
+				{
+					"command": "g2r.action:reject",
+					"when": "view == g2r && ACTIVE_PULL",
+					"group": "navigation"
+				},
+				{
+					"command": "g2r.action:refresh",
+					"when": "view == g2r",
+					"group": "navigation"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "g2r.action:accept",
+					"when": "viewItem  == pull"
+				},
+				{
+					"command": "g2r.action:reject",
+					"when": "viewItem  == pull"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run package",
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"compile-tests": "tsc -p . --outDir out",
+		"watch-tests": "tsc -p . -w --outDir out",
+		"pretest": "npm run compile-tests && npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js",
+		"publish": "vsce publish",
+		"build": "npm run compile && npx vsce package --no-dependencies --baseContentUrl 'http://10.10.0.254:3002/revilo/Gitea-remote-repositories/raw/branch/master'",
+		"release": "./release.sh",
+		"release:dry": "./release.sh --dry-run",
+		"release:force": "./release.sh --force"
+	},
+	"dependencies": {
+		"cross-fetch": "3.1.5"
+	},
+	"devDependencies": {
+		"@types/glob": "^8.0.1",
+		"@types/mocha": "^10.0.1",
+		"@types/node": "16.x",
+		"@types/vscode": "^1.75.0",
+		"@typescript-eslint/eslint-plugin": "^5.49.0",
+		"@typescript-eslint/parser": "^5.49.0",
+		"@vscode/test-electron": "^2.2.2",
+		"eslint": "^8.33.0",
+		"glob": "^8.1.0",
+		"mocha": "^10.1.0",
+		"path-browserify": "^1.0.1",
+		"sharp": "^0.34.5",
+		"ts-loader": "^9.5.4",
+		"typescript": "^4.9.4",
+		"vsce": "^2.15.0",
+		"webpack": "^5.75.0",
+		"webpack-cli": "^5.0.1"
+	},
+	"__metadata": {
+		"installedTimestamp": 1763591913137,
+		"targetPlatform": "undefined",
+		"size": 330722
+	}
+}
